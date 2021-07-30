@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@drawable/mainbackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/adView1"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <Button
+            android:id="@+id/report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/morebutton"
+            android:elevation="50dp"
+            android:fontFamily="sans-serif-medium"
+            android:foreground="@drawable/ripple"
+            android:text="Report against last caller"
+            android:textAllCaps="false"
+            android:textSize="17dp"
+
+
+            />
+
+        <Button
+            android:id="@+id/rateus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/morebutton"
+            android:elevation="50dp"
+            android:fontFamily="sans-serif-black"
+            android:foreground="@drawable/ripple"
+            android:text="Rate us"
+            android:textAllCaps="false"
+            android:textSize="17dp"
+
+
+            />
+
+        <Button
+            android:id="@+id/invitefirend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/morebutton"
+            android:elevation="50dp"
+            android:fontFamily="sans-serif-black"
+            android:foreground="@drawable/ripple"
+            android:text="Invite friends"
+            android:textAllCaps="false"
+            android:textSize="17dp"
+
+            />
+
+        <Button
+            android:id="@+id/privacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/morebutton"
+            android:elevation="50dp"
+            android:fontFamily="sans-serif-black"
+            android:foreground="@drawable/ripple"
+            android:text="Privacy Policy"
+            android:textAllCaps="false"
+            android:textSize="17dp"
+
+            />
+
+        <Button
+            android:id="@+id/contactus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/morebutton"
+
+            android:drawablePadding="1dp"
+            android:elevation="50dp"
+            android:fontFamily="sans-serif-black"
+            android:foreground="@drawable/ripple"
+
+            android:singleLine="true"
+            android:text="Contact us"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="17dp"
+
+            />
+
+        <Button
+            android:id="@+id/moreapp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/morebutton"
+            android:elevation="50dp"
+            android:fontFamily="sans-serif-black"
+            android:foreground="@drawable/ripple"
+            android:text="More apps +"
+            android:textAllCaps="false"
+            android:textSize="17dp"
+
+
+            />
+
+
+    </LinearLayout>
+
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="@string/admob_banner_id"
+        ads:layout_constraintBottom_toBottomOf="parent"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintStart_toStartOf="parent">
+
+    </com.google.android.gms.ads.AdView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
