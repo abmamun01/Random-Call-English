@@ -14,6 +14,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarID"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45mdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </androidx.appcompat.widget.Toolbar>
+
 
 
 
@@ -202,11 +211,12 @@ use it around 2 :00  PM and 7:00 PM IST"
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/finding_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#F37594"
             android:padding="10dp"
+            android:visibility="gone"
             android:text="Finding Your Partner"
             app:layout_constraintEnd_toEndOf="@+id/findingAnimation"
             app:layout_constraintStart_toStartOf="@+id/findingAnimation"
@@ -215,9 +225,9 @@ use it around 2 :00  PM and 7:00 PM IST"
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/findingAnimation"
-            android:layout_width="@dimen/_140mdp"
-            android:layout_height="@dimen/_100mdp"
-            android:visibility="visible"
+            android:layout_width="@dimen/_180mdp"
+            android:layout_height="@dimen/_120mdp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -240,7 +250,7 @@ use it around 2 :00  PM and 7:00 PM IST"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:srcCompat="@drawable/ic_wave"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/_125mdp"/>
+        android:layout_marginBottom="@dimen/_105mdp"/>
 
 
         <ImageView
@@ -255,7 +265,7 @@ use it around 2 :00  PM and 7:00 PM IST"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:srcCompat="@drawable/ic_wave"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/_75mdp"/>
+        android:layout_marginBottom="@dimen/_55mdp"/>
 
 
         <ImageView
@@ -270,7 +280,7 @@ use it around 2 :00  PM and 7:00 PM IST"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:srcCompat="@drawable/ic_wave"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/_25mdp"/>
+        android:layout_marginBottom="@dimen/_15mdp"/>
 
 
 

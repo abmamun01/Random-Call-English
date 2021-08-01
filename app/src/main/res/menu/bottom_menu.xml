@@ -11,6 +11,23 @@
 
 
 
+    <item
+        android:id="@+id/callNavBar"
+        android:icon="@drawable/ic_mic"
+        app:showAsAction="always"
+        android:title="Call" />
+
+
+
+    <item
+        android:id="@+id/historyNavBar"
+        android:icon="@drawable/ic_volume"
+        app:showAsAction="always"
+        android:title="History" />
+
+
+
+
 
 
 </menu>

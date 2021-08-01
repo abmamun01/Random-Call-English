@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string-array name="id_activityScreenTitles">
+
+
+        <item></item>
+        <item>DashBoard</item>
+        <item>Profile </item>
+        <item>Searching</item>
+        <item>Settings</item>
+        <item>Settings</item>
+        <item>Settings</item>
+    </string-array>
+
+
+    <string-array name="id_activityScreenIcon">
+
+
+        <item></item>
+        <item>@drawable/ic_mic</item>
+        <item>@drawable/ic_volume </item>
+        <item>@drawable/ic_call</item>
+        <item>@drawable/ic_volume</item>
+        <item>@drawable/ic_volume</item>
+        <item>@drawable/ic_volume</item>
+
+    </string-array>
+
     <string-array name="videoResolutions">
         <item>Default</item>
         <item>4K (3840 x 2160)</item>

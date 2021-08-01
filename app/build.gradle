@@ -88,4 +88,8 @@ dependencies {
     //Lottie
     def lottieVersion = "3.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    //Nav Drawer
+    implementation 'com.yarolegovich:sliding-root-nav:1.1.1'
+
 }

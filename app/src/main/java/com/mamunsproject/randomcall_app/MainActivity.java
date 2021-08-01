@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -17,12 +19,21 @@ import android.net.Uri;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -54,12 +65,20 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.mamunsproject.randomcall_app.Activities.CallActivity;
 import com.mamunsproject.randomcall_app.Activities.MoreActivity;
+import com.mamunsproject.randomcall_app.Adapter.DrawerAdapter;
+import com.mamunsproject.randomcall_app.Adapter.DrawerItem;
+import com.mamunsproject.randomcall_app.DrawerClasses.SimpleItem;
+import com.mamunsproject.randomcall_app.DrawerClasses.SpaceItem;
+import com.mamunsproject.randomcall_app.Fragment.TestFragment;
+import com.yarolegovich.slidingrootnav.SlidingRootNav;
+import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener, DrawerAdapter.OnItemSelectedListener {
     private FirebaseAuth mAuth;
     private static final int REQUEST_MIC = 991;
     private static final int REQUEST_CAMERA = 992;
@@ -99,7 +118,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Context context = this;
     MediaPlayer mp;
     LottieAnimationView callLottie;
+    BottomAppBar bottomAppBar;
 
+    //--------------------Drawer Nav--------------------
+
+    private static final int POS_DASHBOARD = 0;
+    private static final int POS_ACCOUNT = 1;
+    private static final int POS_MESSAGES = 2;
+    private static final int POS_CART = 3;
+    private static final int POS_LOGOUT = 5;
+
+    private String[] screenTitles;
+    private Drawable[] screenIcons;
+
+    SlidingRootNav slidingRootNav;
+
+
+    //------------Drawer Nav-------------------
 
     private boolean isCalling;
 
@@ -107,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         keyprefResolution = getString(R.string.pref_resolution_key);
@@ -122,12 +158,50 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         mAuth = FirebaseAuth.getInstance();
         callLottie = findViewById(R.id.animationView);
+        bottomAppBar = findViewById(R.id.bottomAppBar);
+
+        Toolbar toolbar = findViewById(R.id.toolbarID);
+        setSupportActionBar(toolbar);
+
+
+        //------------------NAVIGATION DRAWER-------------------------//
+
+        slidingRootNav = new SlidingRootNavBuilder(this)
+                .withDragDistance(180)
+                .withRootViewScale(0.75f)
+                .withRootViewElevation(25)
+                .withToolbarMenuToggle(toolbar)
+                .withMenuOpened(false)
+                .withContentClickableWhenMenuOpened(false)
+                .withSavedState(savedInstanceState)
+                .withMenuLayout(R.layout.drawer_menu)
+                .inject();
+
+        screenIcons = loadScreenIcons();
+        screenTitles = loadScreenTitles();
+
+        DrawerAdapter adapter = new DrawerAdapter(Arrays.asList(
+                createItemFor(POS_DASHBOARD).setChecked(true),
+                createItemFor(POS_ACCOUNT),
+                createItemFor(POS_MESSAGES),
+                createItemFor(POS_CART),
+                new SpaceItem(48),
+                createItemFor(POS_LOGOUT)));
+        adapter.setListener(MainActivity.this);
+
+        RecyclerView list = findViewById(R.id.list);
+        list.setNestedScrollingEnabled(false);
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setAdapter(adapter);
+
+        adapter.setSelected(POS_DASHBOARD);
+
+
+        //------------------NAVIGATION DRAWER-------------------------//
 
 
         //---------------For Bottom Corner radius Start---------------------
         float radius = 45f;
-        BottomAppBar bottomAppBar = findViewById(R.id.bottomAppBar);
-
         MaterialShapeDrawable bottomBarBackground = (MaterialShapeDrawable) bottomAppBar.getBackground();
         bottomBarBackground.setShapeAppearanceModel(
                 bottomBarBackground.getShapeAppearanceModel()
@@ -136,6 +210,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         .setTopLeftCorner(CornerFamily.ROUNDED, radius)
                         .build());
 
+
+        bottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // Handle actions based on the menu item
+                
+                if (item.getItemId()==R.id.menuNavBar){
+                    Toast.makeText(MainActivity.this, "Menu", Toast.LENGTH_SHORT).show();
+                }else if (item.getItemId()==R.id.callNavBar){
+                    Toast.makeText(MainActivity.this, "Call", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
         //---------------For Bottom Corner radius Start---------------------
 
 
@@ -191,6 +279,66 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         admobAds();
         onlypermission();
     }
+
+
+    //----------------------------Drawer Nav--------------------------
+
+    private DrawerItem createItemFor(int position) {
+
+        return new SimpleItem(screenIcons[position], screenTitles[position])
+                .withIconTint(color(R.color.purple_200))
+                .withTextTint(color(R.color.purple_700))
+                .withSelectedIconTint(color(R.color.purple_500))
+                .withSelectedTextTint(color(R.color.backgroundend));
+    }
+
+    @ColorInt
+    private int color(@ColorRes int res) {
+        return ContextCompat.getColor(this, res);
+    }
+
+    @Override
+    public void onItemSelected(int position) {
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        if (position == POS_LOGOUT) {
+            TestFragment testFragment = new TestFragment();
+
+
+            finish();
+        }
+        slidingRootNav.closeMenu();
+        //  Fragment selectedScreen = CenteredTextFragment.createFor(screenTitles[position]);
+        //showFragment(selectedScreen);
+    }
+
+    private void showFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+    }
+
+    private String[] loadScreenTitles() {
+        return getResources().getStringArray(R.array.id_activityScreenTitles);
+    }
+
+    private Drawable[] loadScreenIcons() {
+        TypedArray ta = getResources().obtainTypedArray(R.array.id_activityScreenIcon);
+        Drawable[] icons = new Drawable[ta.length()];
+        for (int i = 0; i < ta.length(); i++) {
+            int id = ta.getResourceId(i, 0);
+            if (id != 0) {
+                icons[i] = ContextCompat.getDrawable(this, id);
+            }
+        }
+        ta.recycle();
+        return icons;
+    }
+
+
+    //----------------------------Drawer Nav--------------------------
+
 
     public void playRingtone() {
 
@@ -302,6 +450,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return true;
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -387,6 +536,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             // findViewById(R.id.text).setVisibility(View.VISIBLE);
             findViewById(R.id.call).setVisibility(View.GONE);
             callLottie.setVisibility(View.VISIBLE);
+            findViewById(R.id.findingAnimation).setVisibility(View.VISIBLE);
 
             findViewById(R.id.call).startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.horizontal_rotate));
 
@@ -397,6 +547,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //  findViewById(R.id.text).setVisibility(View.GONE);
             callLottie.setVisibility(View.GONE);
             findViewById(R.id.call).setVisibility(View.VISIBLE);
+            findViewById(R.id.findingAnimation).setVisibility(View.GONE);
+
 
             findViewById(R.id.animationView).startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.horizontal_rotate));
 
@@ -1005,5 +1157,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onPause();
         sensorManager.unregisterListener(this);
     }
+
 
 }
